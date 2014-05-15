@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Notification</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="demonstration of some noty capabilities">
+    <style type="text/css">
+    body {font-family: sans-serif;}
+    body * {
+      box-sizing:border-box;
+    }
+    .cntr{width: 250px;display: none;box-shadow: 0 0 7px #333;border-radius: 5px;margin: 10px}
+    .cntr1 .noty_buttons{display: none}
+    #upload{display: none}
+    </style>
+</head>
+<body>
+  <input type="file" multiple id="fileSelect" onchange="handleFiles(this.files)" />
+  <button type="button" id="upload">pretend to upload</button>
+    <div class="cntr">
+        <div class="cntr1"></div>
+        <div class="cntr2"></div>
+    </div>
+    <script src="javascripts/jquery1.10.2.min.js"></script>
+    <script src="oldnoty/jquery.noty.js"></script>
+    <script src="oldnoty/inline.js"></script>
+    <script src="oldnoty/default.js"></script>
+
+    <script type="text/javascript">
+
+
+var count = 0;
+var completed = 0;
+var list;
+var ids = [];
+var fileArr;
+function listNoty(type, txt) {
+
+    var ln = $('.cntr1').noty({
+        text: txt,
+        type: type,
+        dismissQueue: true,
+        theme: 'default',
+        closeWith: [],
+        buttons:[
+            {addClass: 'btn btn-primary', text: 'Ok', onClick: function ($noty) {
+                $noty.close();
+                $('.cntr').hide();
+            }
+          }
+        ]
+    });
+  return ln;
+}
+function completeImg(id){
+    $.noty.setText(id, 'Upload complete');
+    $.noty.setType(id, 'success');
+    completed ++;
+    if(completed === count){
+      $.each(ids, function(k, id){
+        $.noty.close(id);
+      });
+      $.noty.setText(list.options.id, 'List saved'); // same as alert.setText('Text Override')
+      $.noty.setType(list.options.id, 'notification');
+      $('.cntr1 .noty_buttons').show();
+      fileArr = [];
+      $("#upload").hide();
+    }
+}
+
+function imageNoty(txt) {
+  var n = $('.cntr2').noty({
+      text: "Uploading "+txt,
+      type: 'information',
+      dismissQueue: true,
+      theme: 'default',
+      closeWith: [],
+      maxVisible: 15
+  });
+  ids.push(n.options.id);
+  $(document.body).append('<button type="button" onClick=\'completeImg("'+n.options.id+'"); $(this).hide();\'>complete ' + n.options.id + '</button>');
+
+}
+
+function uploadFunc(){
+  if(fileArr.length){
+    $('.cntr').show();
+    list = listNoty('warning', 'Saving list');
+    $.each(fileArr, function(k,v){
+      imageNoty(v);
+      count++;
+    });
+  }
+}
+$("#upload").click(function () {
+  uploadFunc();
+});
+
+function handleFiles(files) {
+  if(files.length){
+    $("#upload").show();
+    fileArr = [];
+    $.each(files, function(k,v){
+      fileArr.push(v.name);
+    });
+  }
+}
+    </script>
+</body>
+
+</html>
