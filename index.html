@@ -7,14 +7,28 @@
     <title>Notification</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="demonstration of some noty capabilities">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
     <style type="text/css">
     body {font-family: sans-serif;}
     body * {
       box-sizing:border-box;
     }
-    .cntr{width: 250px;display: none;box-shadow: 0 0 7px #333;border-radius: 5px;margin: 10px}
+    .cntr{width: 300px;display: none;box-shadow: 0 0 7px #333;border-radius: 5px;margin: 10px}
     .cntr1 .noty_buttons{display: none}
     #upload{display: none}
+    .noty_message{
+      padding-left: 50px !important;
+      text-align: left !important;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .noty_message .fa{
+      position: absolute;
+      top:5px;
+      left: 7px;
+      font-size: 25px;
+    }
     </style>
 </head>
 <body>
@@ -27,10 +41,10 @@
     <script src="javascripts/jquery1.10.2.min.js"></script>
     <script src="javascripts/jquery.noty.js"></script>
     <script src="javascripts/noty.inline.js"></script>
-    <script src="javascripts/noty.default.js"></script>
+    <script src="javascripts/noty.theme1.js"></script>
 
     <script type="text/javascript">
-
+    $.noty.defaults.template = '<div class="noty_message"><i class="fa fa-cloud-upload"></i><span class="noty_text"></span><div class="noty_close"></div></div>';
 
 var count = 0;
 var completed = 0;
@@ -43,7 +57,6 @@ function listNoty(type, txt) {
         text: txt,
         type: type,
         dismissQueue: true,
-        theme: 'defaultTheme',
         closeWith: [],
         buttons:[
             {addClass: 'btn btn-primary', text: 'Ok', onClick: function ($noty) {
@@ -76,7 +89,6 @@ function imageNoty(txt) {
       text: "Uploading "+txt,
       type: 'information',
       dismissQueue: true,
-      theme: 'defaultTheme',
       closeWith: [],
       maxVisible: 15
   });
