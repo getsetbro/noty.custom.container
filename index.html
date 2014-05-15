@@ -1,49 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Noty.custom.container : noty notifications in a custom container" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Noty.custom.container</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/getsetbro/noty.custom.container">View on GitHub</a>
-
-          <h1 id="project_title">Noty.custom.container</h1>
-          <h2 id="project_tagline">noty notifications in a custom container</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/getsetbro/noty.custom.container/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/getsetbro/noty.custom.container/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Notification</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="demonstration of some noty capabilities">
+    <style type="text/css">
+    html {
+        height: 100%;
+        width: 100%;
+    }
+    body {
+        font-family: Arial, serif;
+        line-height: 13px
+    }
+    .cntr{width: 200px; margin-left: 125px; margin-top: 100px; border: 1px solid #ccc; padding: 10px}
+    .noty_buttons{display: none}
+    </style>
+</head>
+<body>
+    <div class="cntr">
+        <div class="cntr1"></div>
+        <br>
+        <div class="cntr2"></div>
     </div>
+    <script src="javascripts/jquery1.10.2.min.js"></script>
+    <script src="javascripts/jquery.noty.js"></script>
+    <script src="javascripts/noty.inline.js"></script>
+    <script src="javascripts/noty.default.js"></script>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>noty with custom Container</p>
-      </section>
-    </div>
+    <script type="text/javascript">
+    function listNoty(type, txt) {
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Noty.custom.container maintained by <a href="https://github.com/getsetbro">getsetbro</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+        var ln = $('.cntr1').noty({
+            text: txt,
+            type: type,
+            dismissQueue: true,
+            theme: 'defaultTheme',
+            buttons:[
+                {addClass: 'btn btn-primary', text: 'Ok', onClick: function ($noty) {
+                    $noty.close();
+                    $('.cntr').hide();
+                }
+              }
+            ]
+        });
+      return ln;
+    }
+    var arr = [];
+    function imageNoty(type, txt) {
 
-    
+        var n = $('.cntr2').noty({
+            text: txt,
+            type: type,
+            dismissQueue: true,
+            theme: 'defaultTheme',
+        });
+      arr.push(n.options.id);
+      return n;
+    }
 
-  </body>
+
+
+    $(document).ready(function() {
+
+    var list = listNoty('warning', 'Saving list');
+
+    var info1 = imageNoty('information', 'Uploading title-01.jpg');
+    var info2 = imageNoty('information', 'Uploading title-02.jpg');
+    var info3 = imageNoty('information', 'Uploading title-03.jpg');
+    var info4 = imageNoty('information', 'Uploading title-04.jpg');
+
+    setTimeout(function() {
+      $.noty.setText(info1.options.id, 'Upload complete'); // same as alert.setText('Text Override')
+      $.noty.setType(info1.options.id, 'success'); // same as alert.setText('Text Override')
+    }, 2000);
+
+    setTimeout(function() {
+      $.noty.setText(info2.options.id, 'Upload complete'); // same as alert.setText('Text Override')
+      $.noty.setType(info2.options.id, 'success'); // same as alert.setText('Text Override')
+    }, 3000);
+
+    setTimeout(function() {
+      $.noty.setText(info3.options.id, 'Upload complete'); // same as alert.setText('Text Override')
+      $.noty.setType(info3.options.id, 'success'); // same as alert.setText('Text Override')
+    }, 4000);
+
+    setTimeout(function() {
+      $.noty.setText(info4.options.id, 'Upload complete'); // same as alert.setText('Text Override')
+      $.noty.setType(info4.options.id, 'success'); // same as alert.setText('Text Override')
+
+      $.noty.setText(list.options.id, 'List saved'); // same as alert.setText('Text Override')
+      $.noty.setType(list.options.id, 'notification'); // same as alert.setText('Text Override')
+
+      $.each(arr, function(k,val){
+            console.log(val);
+        $.noty.close(val);
+      });
+      $('.noty_buttons').show();
+
+    }, 5000);
+
+
+    });
+    </script>
+</body>
+
 </html>
