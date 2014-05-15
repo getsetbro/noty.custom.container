@@ -8,19 +8,13 @@
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="demonstration of some noty capabilities">
     <style type="text/css">
-    html {
-        height: 100%;
-        width: 100%;
-    }
-    body {
-        font-family: Arial, serif;
-        line-height: 13px
-    }
-    .cntr{width: 200px; margin-left: 125px; margin-top: 100px; border: 1px solid #ccc; padding: 10px}
-    .noty_buttons{display: none}
+    body {font-family: sans-serif;}
+    .cntr{width: 200px; margin:10px; border: 1px solid #ddd; padding: 10px;display: none}
+    .cntr1 .noty_buttons{display: none}
     </style>
 </head>
 <body>
+  <input type="file" multiple id="input" onchange="handleFiles(this.files)" />
     <div class="cntr">
         <div class="cntr1"></div>
         <br>
@@ -32,79 +26,69 @@
     <script src="javascripts/noty.default.js"></script>
 
     <script type="text/javascript">
-    function listNoty(type, txt) {
 
-        var ln = $('.cntr1').noty({
-            text: txt,
-            type: type,
-            dismissQueue: true,
-            theme: 'defaultTheme',
-            buttons:[
-                {addClass: 'btn btn-primary', text: 'Ok', onClick: function ($noty) {
-                    $noty.close();
-                    $('.cntr').hide();
-                }
-              }
-            ]
-        });
-      return ln;
-    }
-    var arr = [];
-    function imageNoty(type, txt) {
+function listNoty(type, txt) {
 
-        var n = $('.cntr2').noty({
-            text: txt,
-            type: type,
-            dismissQueue: true,
-            theme: 'defaultTheme',
-        });
-      arr.push(n.options.id);
-      return n;
-    }
-
-
-
-    $(document).ready(function() {
-
-    var list = listNoty('warning', 'Saving list');
-
-    var info1 = imageNoty('information', 'Uploading title-01.jpg');
-    var info2 = imageNoty('information', 'Uploading title-02.jpg');
-    var info3 = imageNoty('information', 'Uploading title-03.jpg');
-    var info4 = imageNoty('information', 'Uploading title-04.jpg');
-
-    setTimeout(function() {
-      $.noty.setText(info1.options.id, 'Upload complete'); // same as alert.setText('Text Override')
-      $.noty.setType(info1.options.id, 'success'); // same as alert.setText('Text Override')
-    }, 2000);
-
-    setTimeout(function() {
-      $.noty.setText(info2.options.id, 'Upload complete'); // same as alert.setText('Text Override')
-      $.noty.setType(info2.options.id, 'success'); // same as alert.setText('Text Override')
-    }, 3000);
-
-    setTimeout(function() {
-      $.noty.setText(info3.options.id, 'Upload complete'); // same as alert.setText('Text Override')
-      $.noty.setType(info3.options.id, 'success'); // same as alert.setText('Text Override')
-    }, 4000);
-
-    setTimeout(function() {
-      $.noty.setText(info4.options.id, 'Upload complete'); // same as alert.setText('Text Override')
-      $.noty.setType(info4.options.id, 'success'); // same as alert.setText('Text Override')
-
-      $.noty.setText(list.options.id, 'List saved'); // same as alert.setText('Text Override')
-      $.noty.setType(list.options.id, 'notification'); // same as alert.setText('Text Override')
-
-      $.each(arr, function(k,val){
-            console.log(val);
-        $.noty.close(val);
-      });
-      $('.noty_buttons').show();
-
-    }, 5000);
-
-
+    var ln = $('.cntr1').noty({
+        text: txt,
+        type: type,
+        dismissQueue: true,
+        theme: 'defaultTheme',
+        closeWith: [],
+        buttons:[
+            {addClass: 'btn btn-primary', text: 'Ok', onClick: function ($noty) {
+                $noty.close();
+                $('.cntr').hide();
+            }
+          }
+        ]
     });
+  return ln;
+}
+var count = 0;
+var completed = 0;
+var list;
+var ids = [];
+function completeImg(id){
+    $.noty.setText(id, 'Upload complete');
+    $.noty.setType(id, 'success');
+    completed ++;
+    if(completed === count){
+      $.each(ids, function(k, id){
+        $.noty.close(id);
+      });
+      $.noty.setText(list.options.id, 'List saved'); // same as alert.setText('Text Override')
+      $.noty.setType(list.options.id, 'notification');
+
+      $('.cntr1 .noty_buttons').show();
+    }
+}
+
+function imageNoty(txt) {
+  var n = $('.cntr2').noty({
+      text: txt,
+      type: alert,
+      dismissQueue: true,
+      theme: 'defaultTheme',
+      closeWith: [],
+      maxVisible: 15
+  });
+  ids.push(n.options.id);
+  $(document.body).append('<button type="button" onClick=\'completeImg("'+n.options.id+'"); $(this).hide();\'>complete ' + n.options.id + '</button>');
+
+}
+function handleFiles(files) {
+  if(files.length){
+    $('.cntr').show();
+    list = listNoty('warning', 'Saving list');
+    $.each(files, function(k,v){
+      imageNoty(v.name);
+      count++;
+    });
+  }
+
+}
+
     </script>
 </body>
 
